@@ -12,7 +12,6 @@ public class Payments {
 	 @GeneratedValue(strategy = GenerationType.IDENTITY)
 	 private Long paymentId;
 	 private String paymentStatus;
-	 private BigDecimal amount;
 
 	    @OneToOne
 	    @JoinColumn(name = "booking_id", nullable = false)

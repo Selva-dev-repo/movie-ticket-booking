@@ -29,9 +29,8 @@ public class PaymentController {
 
     @PostMapping
     public Payments createPayment(@RequestParam Long bookingId,
-                                 @RequestParam String paymentStatus,
-                                 @RequestParam BigDecimal amount) {
-        return paymentService.createPayment(bookingId, paymentStatus,amount);
+                                 @RequestParam String paymentStatus) {
+        return paymentService.createPayment(bookingId, paymentStatus);
     }
 
     @DeleteMapping("/{id}")

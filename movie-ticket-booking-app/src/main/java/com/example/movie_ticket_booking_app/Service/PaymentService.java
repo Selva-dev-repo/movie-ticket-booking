@@ -29,14 +29,13 @@ public class PaymentService {
         return paymentRepository.findById(id).orElse(null);
     }
 
-    public Payments createPayment(Long bookingId, String paymentStatus, BigDecimal amount) {
+    public Payments createPayment(Long bookingId, String paymentStatus) {
         Bookings booking = bookingRepository.findById(bookingId)
                 .orElseThrow(() -> new RuntimeException("Booking not found"));
 
         Payments payment = new Payments();
         payment.setPaymentStatus(paymentStatus);
         payment.setBooking(booking);
-        payment.setAmount(amount);
         return paymentRepository.save(payment);
     }
 

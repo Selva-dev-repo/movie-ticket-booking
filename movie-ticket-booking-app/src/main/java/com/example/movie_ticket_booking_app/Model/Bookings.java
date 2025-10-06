@@ -1,5 +1,7 @@
 package com.example.movie_ticket_booking_app.Model;
 
+import java.math.BigDecimal;
+
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -13,6 +15,16 @@ public class Bookings {
 
     private String bookingName;
     private String seatNumber;
+    private BigDecimal amount;
+    
+    //Getters and Setters
+    public BigDecimal getAmount() {
+        return amount;
+    }
+
+    public void setAmount(BigDecimal amount) {
+        this.amount = amount;
+    }
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
