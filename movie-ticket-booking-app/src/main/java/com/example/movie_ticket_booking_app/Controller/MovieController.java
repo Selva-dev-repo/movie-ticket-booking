@@ -9,6 +9,7 @@ import com.example.movie_ticket_booking_app.Service.MovieService;
 
 @RestController
 @RequestMapping("/api/movies")
+@CrossOrigin(origins = "http://localhost:4200")
 public class MovieController {
 	
 	private final MovieService movieService;

@@ -10,6 +10,7 @@ import com.example.movie_ticket_booking_app.Service.BookingService;
 
 @RestController
 @RequestMapping("/api/bookings")
+@CrossOrigin(origins = "http://localhost:4200")
 public class BookingController {
 	private final BookingService bookingService;
     public BookingController(BookingService bookingService) {
@@ -29,10 +30,11 @@ public class BookingController {
     @PostMapping
     public Bookings createBooking(@RequestParam Long userId,
                                  @RequestParam Long movieId,
-                                 @RequestParam String bookingName,
+                                 @RequestParam Long theatreId,
+                                 @RequestParam String bookingStatus,
                                  @RequestParam String seatNumber,
                                  @RequestParam BigDecimal amount) {
-        return bookingService.createBooking(userId, movieId, bookingName, seatNumber, amount);
+        return bookingService.createBooking(userId, movieId, theatreId, bookingStatus, seatNumber, amount);
     }
 
     @DeleteMapping("/{id}")
@@ -48,6 +50,11 @@ public class BookingController {
     @GetMapping("/movie/{movieId}")
     public List<Bookings> getBookingsByMovie(@PathVariable Long movieId) {
         return bookingService.getBookingsByMovie(movieId);
+    }
+    
+    @GetMapping("/theatre/{theatreId}")
+    public List<Bookings> getBookingsByTheatre(@PathVariable Long theatreId) {
+        return bookingService.getBookingsByTheatre(theatreId);
     }
 }
 

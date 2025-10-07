@@ -9,4 +9,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface BookingRepository extends JpaRepository<Bookings, Long> {
 	List<Bookings> findByUserUserId(Long userId);
     List<Bookings> findByMovieMovieId(Long movieId);
+    List<Bookings> findByTheatreTheatreId(Long theatreId);
 }

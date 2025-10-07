@@ -13,7 +13,7 @@ public class Bookings {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long bookingId;
 
-    private String bookingName;
+    private String bookingStatus;
     private String seatNumber;
     private BigDecimal amount;
     
@@ -33,4 +33,8 @@ public class Bookings {
     @ManyToOne
     @JoinColumn(name = "movie_id", nullable = false)
     private Movies movie;
+    
+    @ManyToOne
+    @JoinColumn(name = "theatre_id", nullable = false)
+    private Theatres theatre;
 }

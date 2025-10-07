@@ -10,6 +10,7 @@ import com.example.movie_ticket_booking_app.Service.PaymentService;
 
 @RestController
 @RequestMapping("/api/payments")
+@CrossOrigin(origins = "http://localhost:4200")
 public class PaymentController {
 	
 	private final PaymentService paymentService;

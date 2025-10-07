@@ -11,6 +11,7 @@ import com.example.movie_ticket_booking_app.Service.TheatreService;
 
 @RestController
 @RequestMapping("/api/theatres")
+@CrossOrigin(origins = "http://localhost:4200")
 public class TheatreController {
 	
 	private final TheatreService theatreService;
