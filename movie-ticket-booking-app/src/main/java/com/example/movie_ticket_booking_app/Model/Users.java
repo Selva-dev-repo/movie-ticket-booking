@@ -22,8 +22,8 @@ public class Users {
 	private String password;
 	
 	//Getters and Setters
-	public Long getId() { return userId; }
-	public void setId(Long id) { this.userId = id; }
+	public Long getUserId() { return userId; }
+	public void setUserId(Long userId) { this.userId = userId; }
 
 	public String getUserName() { return userName; }
 	public void setUserName(String username) { this.userName = username; }

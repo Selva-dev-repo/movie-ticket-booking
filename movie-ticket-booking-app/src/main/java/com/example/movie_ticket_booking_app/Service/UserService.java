@@ -16,18 +16,13 @@ public class UserService {
     }
     
     public String loginUser(String userName, String password) {
-        // Find user by username
         Users storedUser = userRepository.findByUserName(userName);
         if (storedUser == null) {
             return "Invalid username or password";
         }
-
-        // Verify password
         if (!storedUser.getPassword().equals(password)) {
             return "Invalid username or password";
         }
-
-        // Successful login
         return "Login successful";
     }
 
