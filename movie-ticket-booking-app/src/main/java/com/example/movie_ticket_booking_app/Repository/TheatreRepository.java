@@ -4,6 +4,6 @@ import com.example.movie_ticket_booking_app.Model.*;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface TheatreRepository extends JpaRepository<Theatres, Long> {
-
+	
 }
 

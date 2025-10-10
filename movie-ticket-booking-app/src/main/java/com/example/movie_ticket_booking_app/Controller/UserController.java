@@ -1,6 +1,6 @@
 package com.example.movie_ticket_booking_app.Controller;
-
-import java.util.List;
+import org.springframework.http.HttpStatus;
+import java.util.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
 import com.example.movie_ticket_booking_app.Model.Users;
@@ -17,12 +17,19 @@ public class UserController {
     }
     
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody Users user) {
-        String result = userService.loginUser(user.getUserName(), user.getPassword());
-        if (result.equals("Login successful")) {
-            return ResponseEntity.ok(result);
+    public ResponseEntity<Map<String, Object>> login(@RequestBody Map<String, String> loginRequest) {
+        String userName = loginRequest.get("userName");
+        String password = loginRequest.get("password");
+        String result = userService.loginUser(userName, password);
+        Map<String, Object> response = new HashMap<>();
+        response.put("message", result);
+        if ("Login successful".equals(result)) {
+            Users user = userService.getUserByUserName(userName);
+            response.put("user", user);
+            return ResponseEntity.ok(response);
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
         }
-        return ResponseEntity.status(401).body(result);
     }
 
     @GetMapping("/users")
@@ -35,7 +42,7 @@ public class UserController {
         return userService.getUserById(id);
     }
 
-    @PostMapping
+    @PostMapping("/users")
     public Users createUser(@RequestBody Users user) {
         return userService.createUser(user);
     }

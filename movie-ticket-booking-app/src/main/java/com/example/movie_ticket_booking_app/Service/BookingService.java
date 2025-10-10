@@ -47,6 +47,7 @@ public class BookingService {
         new RuntimeException("Theatre not found"));
         
         Bookings booking = new Bookings();
+        Users users = new Users();
         booking.setBookingStatus(bookingStatus);
         booking.setSeatNumber(seatNumber);
         booking.setUser(user);
@@ -70,6 +71,10 @@ public class BookingService {
     
     public List<Bookings> getBookingsByTheatre(Long theatreId) {
         return bookingRepository.findByTheatreTheatreId(theatreId);
+    }
+    
+    public Bookings saveBooking(Bookings booking) {
+        return bookingRepository.save(booking);
     }
 }
 

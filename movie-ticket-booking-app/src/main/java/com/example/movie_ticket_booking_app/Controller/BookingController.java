@@ -2,7 +2,7 @@ package com.example.movie_ticket_booking_app.Controller;
 
 import java.math.BigDecimal;
 import java.util.List;
-
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.example.movie_ticket_booking_app.Model.Bookings;
@@ -41,10 +41,11 @@ public class BookingController {
     public void deleteBooking(@PathVariable Long id) {
         bookingService.deleteBooking(id);
     }
-
+    
     @GetMapping("/user/{userId}")
-    public List<Bookings> getBookingsByUser(@PathVariable Long userId) {
-        return bookingService.getBookingsByUser(userId);
+    public ResponseEntity<List<Bookings>> getBookingsByUser(@PathVariable Long userId) {
+        List<Bookings> bookings = bookingService.getBookingsByUser(userId);
+        return ResponseEntity.ok(bookings);
     }
 
     @GetMapping("/movie/{movieId}")
