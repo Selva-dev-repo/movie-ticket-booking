@@ -18,8 +18,8 @@ public class Theatres {
 	private String screenNumber;
 	
 	//Getters and Setters
-	public Long getId() { return theatreId; }
-	public void setId(Long id) { this.theatreId = id; }
+	public Long getTheatreId() { return theatreId; }
+	public void setTheatreId(Long theatreId) { this.theatreId = theatreId; }
 
 	public String getTheatreName() { return theatreName; }
 	public void setTheatreName(String theatreName) { this.theatreName = theatreName; }

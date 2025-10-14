@@ -22,6 +22,14 @@ public class MovieService {
     public Movies getMovieById(Long id) {
         return movieRepository.findById(id).orElse(null);
     }
+    
+    public List<Movies> getAllUpcoming() {
+    	return movieRepository.findByMovieStatus("Coming Soon");
+    }
+
+    public List<Movies> getAllReleased() {
+        return movieRepository.findByMovieStatus("Released");
+    }
 
     public Movies saveMovie(Movies movie) {
         return movieRepository.save(movie);
@@ -31,7 +39,10 @@ public class MovieService {
 		Movies movie = getMovieById(id);
 		movie.setMovieTitle(movieDetails.getMovieTitle());
 		movie.setDuration(movieDetails.getDuration());
-		movie.setShowTime(movieDetails.getShowTime());
+		movie.setGenre(movieDetails.getGenre());
+		movie.setPoster(movieDetails.getPoster());
+		movie.setReleaseDate(movieDetails.getReleaseDate());
+		movie.setMovieStatus(movieDetails.getMovieStatus());
 		return movieRepository.save(movie);
 	}
 

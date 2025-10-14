@@ -27,6 +27,16 @@ public class MovieController {
         return movieService.getMovieById(id);
     }
     
+    @GetMapping("/upcoming")
+    public List<Movies> getUpcomingMovies() {
+        return movieService.getAllUpcoming();
+    }
+
+    @GetMapping("/released")
+    public List<Movies> getReleasedMovies() {
+        return movieService.getAllReleased();
+    }
+    
 //    @PostMapping
 //    public ResponseEntity<Movies> addMovie(@RequestBody Movies movie) {
 //        return ResponseEntity.ok(movieService.addMovie(movie));
@@ -39,6 +49,7 @@ public class MovieController {
     
     @PutMapping("/{id}")
     public Movies updateMovie(@PathVariable Long id, @RequestBody Movies movie) {
+    	System.out.print(movie);
         return movieService.updateMovie(id, movie);
     }
 

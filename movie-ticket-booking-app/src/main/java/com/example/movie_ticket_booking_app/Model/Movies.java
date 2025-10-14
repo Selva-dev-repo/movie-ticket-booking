@@ -2,6 +2,7 @@ package com.example.movie_ticket_booking_app.Model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "movies")
@@ -15,12 +16,17 @@ public class Movies {
 	private String movieTitle;
 	@Column(name = "duration")
 	private int duration;
-	@Column(name = "show_time")
-	private String showTime;
+	@Column(name = "genre")
+	private String genre;
+	private String poster;
+	@Column(name = "release_date")
+	private LocalDate releaseDate;
+	@Column(name = "movie_status")
+	private String movieStatus;
 	
 	//Getters and Setters
-	public Long getId() { return movieId; }
-	public void setId(Long id) { this.movieId = id; }
+	public Long getMovieId() { return movieId; }
+	public void setMovieId(Long movieId) { this.movieId = movieId; }
 
 	public String getMovieTitle() { return movieTitle; }
 	public void setMovieTitle(String movieTitle) { this.movieTitle = movieTitle; }
@@ -28,7 +34,16 @@ public class Movies {
 	public int getDuration() { return duration; }
 	public void setDeuration(int duration) { this.duration = duration; }
  
-	public String getShowTime() { return showTime; }
-	public void setShowTime(String showTime) { this.showTime = showTime; }
+	public String getGenre() { return genre; }
+	public void setGenre(String genre) { this.genre = genre; }
+	
+	public String getPoster() { return poster; }
+	public void setPoster(String poster) { this.poster = poster; }
+	
+	public LocalDate getReleaseDate() { return releaseDate; }
+	public void setReleaseDate(LocalDate releaseDate) { this.releaseDate = releaseDate; }
+	
+	public String getMovieStatus() { return movieStatus; }
+	public void setMovieStatus(String movieStatus) { this.movieStatus = movieStatus; }
 }
 
