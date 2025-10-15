@@ -1,6 +1,7 @@
 package com.example.movie_ticket_booking_app.Service;
 
 import java.util.List;
+import java.time.*;
 import java.math.BigDecimal;
 import org.springframework.stereotype.Service;
 
@@ -38,7 +39,7 @@ public class BookingService {
         return bookingRepository.findById(id).orElse(null);
     }
 
-    public Bookings createBooking(Long userId, Long movieId, Long theatreId, String bookingStatus, String seatNumber, BigDecimal amount) {
+    public Bookings createBooking(Long userId, Long movieId, Long theatreId, String bookingStatus, LocalDate showDate, String showTime, String seatNumber, BigDecimal amount) {
         Users user = userRepository.findById(userId).orElseThrow(() ->
                 new RuntimeException("User not found"));
         Movies movie = movieRepository.findById(movieId).orElseThrow(() ->
@@ -53,6 +54,8 @@ public class BookingService {
         booking.setUser(user);
         booking.setMovie(movie);
         booking.setTheatre(theatre);
+        booking.setShowDate(showDate);
+        booking.setShowTime(showTime);
         booking.setAmount(amount);
         return bookingRepository.save(booking);
     }

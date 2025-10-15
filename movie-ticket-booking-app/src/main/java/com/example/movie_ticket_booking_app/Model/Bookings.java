@@ -1,6 +1,7 @@
 package com.example.movie_ticket_booking_app.Model;
 
 import java.math.BigDecimal;
+import java.time.*;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -14,6 +15,10 @@ public class Bookings {
     private Long bookingId;
 
     private String bookingStatus;
+    @Column(name = "show_date")
+    private LocalDate showDate;
+    @Column(name = "show_time")
+    private String showTime;
     private String seatNumber;
     private BigDecimal amount;
     

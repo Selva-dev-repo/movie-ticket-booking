@@ -1,6 +1,7 @@
 package com.example.movie_ticket_booking_app.Controller;
 
 import java.math.BigDecimal;
+import java.time.*;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -32,9 +33,11 @@ public class BookingController {
                                  @RequestParam Long movieId,
                                  @RequestParam Long theatreId,
                                  @RequestParam String bookingStatus,
+                                 @RequestParam String showTime,
+                                 @RequestParam LocalDate showDate,
                                  @RequestParam String seatNumber,
                                  @RequestParam BigDecimal amount) {
-        return bookingService.createBooking(userId, movieId, theatreId, bookingStatus, seatNumber, amount);
+        return bookingService.createBooking(userId, movieId, theatreId, bookingStatus, showDate, showTime, seatNumber, amount);
     }
 
     @DeleteMapping("/{id}")
