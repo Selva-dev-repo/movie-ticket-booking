@@ -20,11 +20,15 @@ public class UserController {
     public ResponseEntity<Map<String, Object>> login(@RequestBody Map<String, String> loginRequest) {
         String userName = loginRequest.get("userName");
         String password = loginRequest.get("password");
+
         String result = userService.loginUser(userName, password);
+
         Map<String, Object> response = new HashMap<>();
         response.put("message", result);
+
         if ("Login successful".equals(result)) {
             Users user = userService.getUserByUserName(userName);
+            user.setPassword(null);
             response.put("user", user);
             return ResponseEntity.ok(response);
         } else {
@@ -47,9 +51,20 @@ public class UserController {
         return userService.createUser(user);
     }
     
+//    @PutMapping("/users/{id}")
+//    public Users updateUser(@PathVariable Long id, @RequestBody Users user) {
+//        return userService.updateUser(id, user);
+//    }
+    
     @PutMapping("/users/{id}")
-    public Users updateUser(@PathVariable Long id, @RequestBody Users user) {
-        return userService.updateUser(id, user);
+    public ResponseEntity<Object> updateUser(@PathVariable Long id, @RequestBody Users user) {
+        try {
+            Users updatedUser = userService.updateUser(id, user);
+            return ResponseEntity.ok(updatedUser);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
     }
     
     @DeleteMapping("/users/{id}")

@@ -2,29 +2,39 @@ package com.example.movie_ticket_booking_app.Service;
 import java.util.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
+import org.springframework.web.server.ResponseStatusException;
 import com.example.movie_ticket_booking_app.Model.Users;
 import com.example.movie_ticket_booking_app.Repository.UserRepository;
 
 @Service
 public class UserService {
-	
+
 	private final UserRepository userRepository;
+	
+	@Autowired
+    private PasswordEncoder passwordEncoder;
+	
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
     
     public String loginUser(String userName, String password) {
-    	Optional<Users> storedUserOpt = userRepository.findByUserName(userName);
-        if (storedUserOpt.isEmpty()) {
-            return "Invalid username or password";
+        Users user = userRepository.findByUserName(userName).orElse(null);
+
+        if (user == null) {
+            return "User not found";
         }
-        Users storedUser = storedUserOpt.get();
-        if (!storedUser.getPassword().equals(password)) {
-            return "Invalid username or password";
+
+        if (passwordEncoder.matches(password, user.getPassword())) {
+//        if(user.getPassword().equals(password)) {
+            return "Login successful";
+        } else {
+            return "Invalid password";
         }
-        return "Login successful";
     }
     
     public Users getUserByUserName(String userName) {
@@ -43,19 +53,58 @@ public class UserService {
     	if ("admin".equals(user.getRole()) && userRepository.findByUserName("admin").isPresent()) {
             throw new IllegalArgumentException("Admin user already exists");
         }
+    	user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
     
-    public Users updateUser(Long id, Users userDetails) {
-        Users user = getUserById(id);
-        
-        if ("admin".equals(userDetails.getRole()) && !user.getUserName().equals("admin") && userRepository.findByUserName("admin").isPresent()) {
-            throw new IllegalArgumentException("Cannot assign admin role; admin already exists");
+//    public Users updateUser(Long id, Users userDetails) {
+//        Users user = getUserById(id);
+//        
+//        if ("admin".equals(userDetails.getRole()) && !user.getUserName().equals("admin") && userRepository.findByUserName("admin").isPresent()) {
+//            throw new IllegalArgumentException("Cannot assign admin role; admin already exists");
+//        }
+//        user.setUserName(userDetails.getUserName());
+//        user.setPassword(userDetails.getPassword());
+//        user.setRole(userDetails.getRole());
+//        user.setMobileNumber(userDetails.getMobileNumber());
+//        user.setAddress(userDetails.getAddress());
+//        user.setPincode(userDetails.getPincode());
+//        user.setCity(userDetails.getCity());
+//        user.setState(userDetails.getState());
+//        user.setCountry(userDetails.getCountry());
+//        return userRepository.save(user);
+//    }
+    
+    public Users updateUser(Long id, Users updatedData) {
+        Users existingUser = userRepository.findById(id)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found with ID: " + id));
+
+        if (updatedData.getUserName() != null) {
+            existingUser.setUserName(updatedData.getUserName());
         }
-        user.setUserName(userDetails.getUserName());
-        user.setPassword(userDetails.getPassword());
-        user.setRole(userDetails.getRole());
-        return userRepository.save(user);
+        if (updatedData.getRole() != null) {
+            existingUser.setRole(updatedData.getRole());
+        }
+        if (updatedData.getAddress() != null) {
+            existingUser.setAddress(updatedData.getAddress());
+        }
+        if (updatedData.getCity() != null) {
+            existingUser.setCity(updatedData.getCity());
+        }
+        if (updatedData.getCountry() != null) {
+            existingUser.setCountry(updatedData.getCountry());
+        }
+        if (updatedData.getMobileNumber() != null) {
+            existingUser.setMobileNumber(updatedData.getMobileNumber());
+        }
+        if (updatedData.getPincode() != null) {
+            existingUser.setPincode(updatedData.getPincode());
+        }
+        if (updatedData.getState() != null) {
+            existingUser.setState(updatedData.getState());
+        }
+
+        return userRepository.save(existingUser);
     }
 
     public void deleteUser(Long id) {
