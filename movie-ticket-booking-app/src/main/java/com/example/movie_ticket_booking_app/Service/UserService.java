@@ -8,6 +8,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import com.example.movie_ticket_booking_app.Model.Users;
+import com.example.movie_ticket_booking_app.DTO.*;
 import com.example.movie_ticket_booking_app.Repository.UserRepository;
 
 @Service
@@ -22,19 +23,30 @@ public class UserService {
         this.userRepository = userRepository;
     }
     
-    public String loginUser(String userName, String password) {
-        Users user = userRepository.findByUserName(userName).orElse(null);
+//    public String loginUser(String userName, String password) {
+//        Users user = userRepository.findByUserName(userName).orElse(null);
+//
+//        if (user == null) {
+//            return "User not found";
+//        }
+//
+//        if (passwordEncoder.matches(password, user.getPassword())) {
+////        if(user.getPassword().equals(password)) {
+//            return "Login successful";
+//        } else {
+//            return "Invalid password";
+//        }
+//    }
+    
+    public AuthResponseDTO loginUser(AuthRequestDTO loginRequest) {
+        Users user = userRepository.findByUserName(loginRequest.getUserName())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid username or password"));
 
-        if (user == null) {
-            return "User not found";
+        if (!passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid username or password");
         }
 
-        if (passwordEncoder.matches(password, user.getPassword())) {
-//        if(user.getPassword().equals(password)) {
-            return "Login successful";
-        } else {
-            return "Invalid password";
-        }
+        return new AuthResponseDTO("Login successful", user.getUserName(), user.getRole());
     }
     
     public Users getUserByUserName(String userName) {

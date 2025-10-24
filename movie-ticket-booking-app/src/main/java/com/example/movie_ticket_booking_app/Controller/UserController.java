@@ -4,6 +4,7 @@ import java.util.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
 import com.example.movie_ticket_booking_app.Model.Users;
+import com.example.movie_ticket_booking_app.DTO.*;
 import com.example.movie_ticket_booking_app.Service.UserService;
 
 @RestController
@@ -16,24 +17,30 @@ public class UserController {
         this.userService = userService;
     }
     
+//    @PostMapping("/login")
+//    public ResponseEntity<Map<String, Object>> login(@RequestBody Map<String, String> loginRequest) {
+//        String userName = loginRequest.get("userName");
+//        String password = loginRequest.get("password");
+//
+//        String result = userService.loginUser(userName, password);
+//
+//        Map<String, Object> response = new HashMap<>();
+//        response.put("message", result);
+//
+//        if ("Login successful".equals(result)) {
+//            Users user = userService.getUserByUserName(userName);
+//            user.setPassword(null);
+//            response.put("user", user);
+//            return ResponseEntity.ok(response);
+//        } else {
+//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+//        }
+//    }
+    
     @PostMapping("/login")
-    public ResponseEntity<Map<String, Object>> login(@RequestBody Map<String, String> loginRequest) {
-        String userName = loginRequest.get("userName");
-        String password = loginRequest.get("password");
-
-        String result = userService.loginUser(userName, password);
-
-        Map<String, Object> response = new HashMap<>();
-        response.put("message", result);
-
-        if ("Login successful".equals(result)) {
-            Users user = userService.getUserByUserName(userName);
-            user.setPassword(null);
-            response.put("user", user);
-            return ResponseEntity.ok(response);
-        } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
-        }
+    public ResponseEntity<AuthResponseDTO> login(@RequestBody AuthRequestDTO loginRequest) {
+        AuthResponseDTO response = userService.loginUser(loginRequest);
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/users")
