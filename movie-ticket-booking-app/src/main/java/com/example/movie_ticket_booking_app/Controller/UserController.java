@@ -37,25 +37,74 @@ public class UserController {
 //        }
 //    }
     
+//    @PostMapping("/login")
+//    public ResponseEntity<AuthResponseDTO> login(@RequestBody AuthRequestDTO loginRequest) {
+//        AuthResponseDTO response = userService.loginUser(loginRequest);
+//        return ResponseEntity.ok(response);
+//    }
+    
     @PostMapping("/login")
     public ResponseEntity<AuthResponseDTO> login(@RequestBody AuthRequestDTO loginRequest) {
-        AuthResponseDTO response = userService.loginUser(loginRequest);
-        return ResponseEntity.ok(response);
+        try {
+            AuthResponseDTO response = userService.loginUser(loginRequest);
+            if (response.isSuccess()) {
+                return ResponseEntity.ok(response);
+            } else {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+            }
+        } catch (Exception e) {
+            AuthResponseDTO errorResponse = new AuthResponseDTO(false, "Internal server error", null);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+        }
     }
 
+//    @GetMapping("/users")
+//    public List<Users> getUsers() {
+//        return userService.getAllUsers();
+//    }
+    
     @GetMapping("/users")
-    public List<Users> getUsers() {
-        return userService.getAllUsers();
+    public ResponseEntity<List<Users>> getUsers() {
+        try {
+            List<Users> users = userService.getAllUsers();
+            return ResponseEntity.ok(users);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
     }
     
+//    @GetMapping("/users/{id}")
+//    public Users getUser(@PathVariable Long id) {
+//        return userService.getUserById(id);
+//    }
+    
     @GetMapping("/users/{id}")
-    public Users getUser(@PathVariable Long id) {
-        return userService.getUserById(id);
+    public ResponseEntity<Users> getUser(@PathVariable Long id) {
+        try {
+            Users user = userService.getUserById(id);
+            if (user != null) {
+                return ResponseEntity.ok(user);
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
     }
 
+//    @PostMapping("/users")
+//    public Users createUser(@RequestBody Users user) {
+//        return userService.createUser(user);
+//    }
+    
     @PostMapping("/users")
-    public Users createUser(@RequestBody Users user) {
-        return userService.createUser(user);
+    public ResponseEntity<Users> createUser(@RequestBody Users user) {
+    	try {
+    		Users createdUser = userService.createUser(user);
+    		return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
+    	} catch (Exception e) {
+    		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+    	}
     }
     
 //    @PutMapping("/users/{id}")
@@ -74,9 +123,33 @@ public class UserController {
         }
     }
     
+//    @PutMapping("/users/{id}")
+//    public ResponseEntity<Object> updateUser(@PathVariable Long id, @RequestBody Users user) {
+//    	try {
+//    		Users updatedUser = userService.updateUser(id, user);
+//    		if (updatedUser != null) {
+//    			return ResponseEntity.ok(updatedUser);
+//    		} else {
+//    			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+//    		}
+//    	} catch (Exception e) {
+//    		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+//    	}
+//    }
+    
+//    @DeleteMapping("/users/{id}")
+//    public void deleteUser(@PathVariable Long id) {
+//        userService.deleteUser(id);
+//    }
+    
     @DeleteMapping("/users/{id}")
-    public void deleteUser(@PathVariable Long id) {
-        userService.deleteUser(id);
+    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
+    	try {
+    		userService.deleteUser(id);
+    		return ResponseEntity.noContent().build();
+    	} catch (Exception e) {
+    		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    	}
     }
 }
 
