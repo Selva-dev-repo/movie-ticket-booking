@@ -5,7 +5,8 @@ import java.time.*;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+import org.springframework.format.annotation.DateTimeFormat;
+import com.example.movie_ticket_booking_app.DTO.*;
 import com.example.movie_ticket_booking_app.Model.Bookings;
 import com.example.movie_ticket_booking_app.Service.BookingService;
 
@@ -38,6 +39,25 @@ public class BookingController {
                                  @RequestParam String seatNumber,
                                  @RequestParam BigDecimal amount) {
         return bookingService.createBooking(userId, movieId, theatreId, bookingStatus, showDate, showTime, seatNumber, amount);
+    }
+    
+    @PostMapping("/check-availability")
+    public ResponseEntity<boolean[]> checkAvailability(@RequestBody AvailabilityRequestDTO request) {
+        boolean[] availability = bookingService.getAvailabilityForSeats(
+                request.getSeats(),
+                request.getTheatreId(),
+                request.getMovieId(),
+                request.getShowDate(),
+                request.getShowTime()
+        );
+        return ResponseEntity.ok(availability);
+    }
+    
+    @PutMapping("/{bookingId}/cancel")
+    public ResponseEntity<Bookings> cancelBooking(@PathVariable Long bookingId,
+    											  @RequestParam Long userId) {
+        Bookings booking = bookingService.cancelBooking(bookingId, userId);
+        return ResponseEntity.ok(booking);
     }
 
     @DeleteMapping("/{id}")

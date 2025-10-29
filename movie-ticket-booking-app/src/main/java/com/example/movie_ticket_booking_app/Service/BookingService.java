@@ -1,7 +1,8 @@
 package com.example.movie_ticket_booking_app.Service;
 
-import java.util.List;
+import java.util.*;
 import java.time.*;
+import java.util.stream.Collectors;
 import java.math.BigDecimal;
 import org.springframework.stereotype.Service;
 
@@ -59,6 +60,61 @@ public class BookingService {
         booking.setAmount(amount);
         return bookingRepository.save(booking);
     }
+    
+    public Bookings saveBooking(Bookings booking) {
+        return bookingRepository.save(booking);
+    }
+    
+    public boolean[] getAvailabilityForSeats(
+            List<String> seatLabels,
+            Long theatreId,
+            Long movieId,
+            String showDateStr,
+            String showTime) {
+
+//        log.info("Checking seats: {}", seatLabels);
+
+        LocalDate showDate = LocalDate.parse(showDateStr);
+
+        List<Bookings> bookings = bookingRepository
+                .findByTheatreTheatreIdAndMovieMovieIdAndShowDateAndShowTimeAndBookingStatus(
+                        theatreId, movieId, showDate, showTime, "Confirmed");
+
+        Set<String> bookedSeats = bookings.stream()
+                .map(Bookings::getSeatNumber)
+                .filter(Objects::nonNull)
+                .filter(s -> !s.isBlank())
+                .flatMap(s -> Arrays.stream(s.split("\\s*,\\s*")))
+                .map(String::trim)
+                .filter(s -> !s.isEmpty())
+                .collect(Collectors.toSet());
+
+//        log.info("Booked seats: {}", bookedSeats);
+
+        boolean[] result = new boolean[seatLabels.size()];
+        for (int i = 0; i < seatLabels.size(); i++) {
+            result[i] = !bookedSeats.contains(seatLabels.get(i));
+        }
+        return result;
+    }
+    
+    public Bookings cancelBooking(Long bookingId, Long userId) {
+        Optional<Bookings> optionalBooking = bookingRepository.findById(bookingId);
+
+        if (optionalBooking.isEmpty()) {
+            throw new RuntimeException("Booking not found with ID: " + bookingId);
+        }
+
+        Bookings booking = optionalBooking.get();
+
+        // Ensure the booking belongs to the logged-in user
+        if (!booking.getUser().getUserId().equals(userId)) {
+            throw new RuntimeException("Unauthorized to cancel this booking.");
+        }
+
+        booking.setBookingStatus("Cancelled");
+        return bookingRepository.save(booking);
+    }
 
     public void deleteBooking(Long id) {
         bookingRepository.deleteById(id);
@@ -74,10 +130,6 @@ public class BookingService {
     
     public List<Bookings> getBookingsByTheatre(Long theatreId) {
         return bookingRepository.findByTheatreTheatreId(theatreId);
-    }
-    
-    public Bookings saveBooking(Bookings booking) {
-        return bookingRepository.save(booking);
     }
 }
 
