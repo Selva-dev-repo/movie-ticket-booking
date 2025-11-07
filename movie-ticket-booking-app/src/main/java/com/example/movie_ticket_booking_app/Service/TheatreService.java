@@ -30,6 +30,7 @@ public class TheatreService {
     public Theatres updateTheatre(Long id, Theatres theatreDetails) {
     	Theatres theatre = getTheatreById(id);
     	theatre.setTheatreName(theatreDetails.getTheatreName());
+    	theatre.setLocation(theatreDetails.getLocation());  	
     	theatre.setScreenNumber(theatreDetails.getScreenNumber());
     	return theatreRepository.save(theatre);
     }
